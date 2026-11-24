@@ -8,7 +8,7 @@ import { SMAAPass } from 'three/addons/postprocessing/SMAAPass.js';
 import { GTAOPass } from 'three/addons/postprocessing/GTAOPass.js';
 
 export const GRADE = {
-  tone: 'neutral', exposure: 0.86, lift: 0.035, sat: 0.78, cool: [-0.006, 0.0, 0.012],
+  tone: 'neutral', exposure: 0.95, lift: 0.035, sat: 0.8, wb: [0.9, 0.985, 1.12], cool: [-0.006, 0.0, 0.012],
 };
 
 // final grade inside the tone-mapping function: used by OutputPass and, on the
@@ -16,7 +16,8 @@ export const GRADE = {
 export function installGrade(params = {}) {
   Object.assign(GRADE, params);
   const g = GRADE;
-  const base = g.tone === 'aces' ? 'ACESFilmicToneMapping( color )' : 'NeutralToneMapping( color )';
+  const wb = `vec3( ${g.wb.map((v) => Number(v).toFixed(4)).join(', ')} )`;
+  const base = g.tone === 'aces' ? `ACESFilmicToneMapping( color * ${wb} )` : `NeutralToneMapping( color * ${wb} )`;
   const f = (x) => Number(x).toFixed(4);
   const code = `vec3 CustomToneMapping( vec3 color ) {
   vec3 c = ${base};

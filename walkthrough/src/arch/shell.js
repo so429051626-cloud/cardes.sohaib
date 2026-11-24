@@ -46,7 +46,7 @@ export function edgesOf(def) {
 }
 
 // box of a wall piece: along-range [u0,u1], height [v0,v1], depth from face outward [d0,d1]
-function wallPieceGeom(e, u0, u1, v0, v1, d0 = 0, d1 = e.t) {
+export function wallPieceGeom(e, u0, u1, v0, v1, d0 = 0, d1 = e.t) {
   const f = e.fixed;
   if (e.horiz) {
     const Ya = f + e.out[1] * d0, Yb = f + e.out[1] * d1;

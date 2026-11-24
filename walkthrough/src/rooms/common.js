@@ -136,3 +136,35 @@ export function artOnWall(z, k, e, along, yc, w, h, art, o = {}) {
 export function edge(z, side, at) {
   return z.edges.find((e) => e.side === side && (at === undefined || (at >= e.a0 - 1e-3 && at <= e.a1 + 1e-3)));
 }
+
+import { wallPieceGeom } from '../arch/shell.js';
+import { uvBox, MAPSCALE } from '../core/geom.js';
+
+// overlay panel on a wall (accent paint, wallpaper, stone): along [a0,a1], height [y0,y1], d proud
+export function wallPanel(z, e, a0, a1, y0, y1, spec, d = 0.006, o = {}) {
+  const g = wallPieceGeom(e, a0, a1, y0, y1, -d, 0);
+  const name = typeof spec === 'string' ? spec : spec.n;
+  uvBox(g, MAPSCALE[name] || 1, 'y');
+  return z.k.mesh(g, spec, { keepUV: true });
+}
+
+// picture-frame mouldings with chair rail between a0 and a1 on edge e
+export function mouldings(z, e, a0, a1, o = {}) {
+  const m = o.mat || sol('#EDECE9', 0.5, 0);
+  const pw = 0.02, pd = 0.012;
+  const len = a1 - a0;
+  if (len < 0.5) return;
+  const strip = (u0, u1, v0, v1) => z.k.mesh(wallPieceGeom(e, u0, u1, v0, v1, -pd, 0), m, { uv: false });
+  strip(a0, a1, 0.91, 0.93);
+  const margin = 0.12;
+  const n = Math.max(1, Math.round((len - margin) / 1.15));
+  const fw = (len - margin * (n + 1)) / n;
+  if (fw < 0.3) return;
+  for (let i = 0; i < n; i++) {
+    const u0 = a0 + margin + i * (fw + margin), u1 = u0 + fw;
+    for (const [v0, v1] of [[0.22, 0.78], [1.1, o.top || 2.45]]) {
+      strip(u0, u1, v0, v0 + pw); strip(u0, u1, v1 - pw, v1);
+      strip(u0, u0 + pw, v0 + pw, v1 - pw); strip(u1 - pw, u1, v0 + pw, v1 - pw);
+    }
+  }
+}

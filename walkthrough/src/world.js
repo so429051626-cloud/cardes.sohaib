@@ -8,6 +8,8 @@ import { buildShell } from './arch/shell.js';
 import { ZONES, OPENINGS, CLOSED_DOORS } from './rooms/plan.js';
 
 const NO_SHADOW = new Set(['glass', 'glassDark', 'sheer', 'glow', 'shadow', 'exterior', 'emit', 'mirror']);
+// materials that make up a room's shell: what you see through a thin, distant door sliver
+const SHELL = new Set(['plaster', 'wallTile', 'mintTile', 'cloudPlaster', 'leafPaper', 'marbleFloor', 'marbleFloorL', 'creamFloor', 'recFloor', 'bathFloor', 'exterior', 'wavy']);
 
 export class Zone {
   constructor(def, world) {
@@ -40,6 +42,13 @@ export class Zone {
       uProbeMax: { value: new THREE.Vector3(b.x1 + 0.02, top + 0.02, -b.y0 + 0.02) },
     };
     this.stats = { tris: 0, draws: 0 };
+  }
+
+  // 'full' renders everything, 'shell' only walls/floor/ceiling/windows
+  setLod(mode) {
+    if (this.lod === mode) return;
+    this.lod = mode;
+    for (const m of this.group.children) m.visible = mode === 'full' || !!m.userData.shell;
   }
 
   contains(X, Y) {
@@ -143,6 +152,7 @@ export class Zone {
       const mat = M.forZone(name, this);
       const mesh = new THREE.Mesh(merged, mat);
       mesh.name = this.id + ':' + name;
+      mesh.userData.shell = SHELL.has(name);
       mesh.castShadow = !NO_SHADOW.has(name) && !info.unlit;
       mesh.receiveShadow = !info.unlit;
       if (name === 'shadow') mesh.renderOrder = 1;

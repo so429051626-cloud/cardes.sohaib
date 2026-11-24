@@ -27,7 +27,7 @@ export function buildA(z) {
   // small ficus in the south-east corner
   z.place(ficus({ h: 1.7, seed: 'ficusA', leaves: 320 }), 6.45, -5.45, 0);
   // brass signature, backlit, on the north wall left of the door
-  signature(z, 1.95, -0.15, 2.08, 2.7);
+  signature(z, 2.15, -0.15, 2.08, 2.6);
 }
 
 function signature(z, X, Y, yc, w) {
@@ -92,7 +92,7 @@ export function buildB(z) {
   // ---- TV wall (east, X = 7.0) ----
   z.place(wavyPanel(3.6, 2.95), 7.0, 4.0, 270);
   z.place(tv(1.68, 0.97), 6.95, 4.0, 270, { y: 1.55 });
-  const con = consoleFloating(3.4, 0.32, 0.45, 0.2, { groove: true });
+  const con = consoleFloating(3.4, 0.32, 0.45, 0.2, { groove: false, gap: { w: 1.62, h: 0.22, y: 0.05 } });
   deer(con, -1.3, 0.52, 0.02, 1.0);
   candle(con, -1.05, 0.52, 0.08);
   candle(con, 1.25, 0.52, 0.05);

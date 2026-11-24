@@ -81,20 +81,20 @@ export function showerColumn(o = {}) {
   return k;
 }
 
-// recessed lit niche (seen as an inset box with LED strip and bottles)
+// lit niche: a boxed-out shelf niche (proud of the wall) with LED strip and bottles
 export function litNiche(w, h, o = {}) {
   const k = new Kit('niche');
-  const d = 0.12;
-  const back = o.back || sol('#e9e9e7', 0.3, 0);
-  k.box(back, w, h, 0.01, 0, h / 2, -d, { r: 0 });
-  for (const s of [-1, 1]) k.box(back, 0.01, h, d, s * w / 2, h / 2, -d / 2, { r: 0 });
-  k.box(back, w, 0.01, d, 0, 0.005, -d / 2, { r: 0 });
-  k.box(back, w, 0.01, d, 0, h - 0.005, -d / 2, { r: 0 });
+  const d = 0.13;
+  const back = o.back || sol('#ecebe8', 0.3, 0);
+  const t = 0.02;
+  for (const s of [-1, 1]) k.box(back, t, h + 2 * t, d, s * (w / 2 + t / 2), h / 2, d / 2, { r: 0.002 });
+  k.box(back, w + 2 * t, t, d, 0, -t / 2, d / 2, { r: 0.002 });
+  k.box(back, w + 2 * t, t, d, 0, h + t / 2, d / 2, { r: 0.002 });
   const col = '#' + kelvin(o.K || 5000).getHexString();
-  k.box(emit(col, 4), w - 0.02, 0.006, 0.01, 0, h - 0.015, -0.02, { r: 0 });
-  k.glowPlane(col, 0.8, w - 0.02, h - 0.03, 'edge', { fall: 2.2, ends: true, pos: [0, h - 0.02, -d + 0.008], rot: [0, 0, Math.PI] });
+  k.box(emit(col, 4), w - 0.02, 0.005, 0.01, 0, h - 0.006, d - 0.025, { r: 0 });
+  k.glowPlane(col, 0.7, w - 0.02, h - 0.02, 'edge', { fall: 2.2, ends: true, pos: [0, h - 0.01, 0.004], rot: [0, 0, Math.PI] });
   const rng = new RNG('niche' + w);
-  bottles(k, -w / 2 + 0.08, 0.01, -d / 2, Math.max(2, Math.floor(w / 0.12)), rng, o.pal || ['#f2f2f0', '#141414', '#c9c3b8']);
+  bottles(k, -w / 2 + 0.06, 0.0, d / 2, Math.max(2, Math.floor(w / 0.11)), rng, o.pal || ['#f2f2f0', '#141414', '#c9c3b8']);
   return k;
 }
 

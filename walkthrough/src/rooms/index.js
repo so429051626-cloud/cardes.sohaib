@@ -1,13 +1,11 @@
 // Room builders keyed by zone id. Each receives the Zone and places
 // furniture, decor and lights from data.
-import { daylight } from './common.js';
 import { buildA, buildB } from './hall.js';
 import { buildC, buildD, buildE } from './kitchen.js';
-
-const basic = (o) => (z) => daylight(z, o);
+import { buildF, buildF1 } from './master.js';
+import { buildG, buildH, buildH1, buildI, buildK, buildM, buildN, buildN1, buildL } from './bedrooms.js';
 
 export const ROOMS = {
-  A: buildA, B: buildB, C: buildC, D: buildD, E: buildE,
-  F: basic(), F1: basic({ sun: false }),
-  G: basic({ sun: false }), H: basic(), H1: () => {}, I: basic(), K: basic(), L: basic(), M: basic(), N: basic(), N1: basic({ sun: false }),
+  A: buildA, B: buildB, C: buildC, D: buildD, E: buildE, F: buildF, F1: buildF1,
+  G: buildG, H: buildH, H1: buildH1, I: buildI, K: buildK, L: buildL, M: buildM, N: buildN, N1: buildN1,
 };

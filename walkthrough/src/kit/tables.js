@@ -78,7 +78,15 @@ export function consoleSculptural() {
 export function consoleFloating(L, h, d, bottom, o = {}) {
   const k = new Kit('consoleF');
   const m = o.mat || C.whiteLacquer;
-  k.boxB(m, L, h, d, 0, bottom, 0, { r: 0.006 });
+  if (o.gap) {
+    // opening for a fireplace insert: blocks around a w x gh hole starting at gy above the bottom
+    const { w: gw, h: gh, y: gy } = o.gap;
+    const side = (L - gw) / 2;
+    for (const s of [-1, 1]) k.boxB(m, side, h, d, s * (gw / 2 + side / 2), bottom, 0, { r: 0.004 });
+    k.boxB(m, gw, gy, d, 0, bottom, 0, { r: 0.002 });
+    k.boxB(m, gw, h - gy - gh, d, 0, bottom + gy + gh, 0, { r: 0.002 });
+    k.box(sol('#0a0a0b', 0.5, 0), gw, gh, 0.01, 0, bottom + gy + gh / 2, -d / 2 + 0.06, { r: 0 });
+  } else k.boxB(m, L, h, d, 0, bottom, 0, { r: 0.006 });
   if (o.walnutFrame) {
     k.boxB(tex('walnut'), L + 0.04, 0.03, d + 0.02, 0, bottom - 0.03, 0, { r: 0.004, grain: 'x' });
     for (const x of [-L / 2 + 0.05, L / 2 - 0.05]) k.boxB(tex('walnut'), 0.04, bottom - 0.03, 0.04, x, 0, d / 2 - 0.06, { r: 0.004 });

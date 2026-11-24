@@ -244,7 +244,7 @@ export class Materials {
     this.def('plaster', () => S({ map: T.plaster, normalMap: T.plasterN, normalScale: new THREE.Vector2(0.5, 0.5), roughness: 0.92, vertexColors: true }), { mapScale: 2.0, color: true });
     this.def('cloudPlaster', () => S({ map: T.cloudPlaster, roughness: 0.85, vertexColors: true }), { mapScale: 2.4, color: true });
     this.def('leafPaper', () => S({ map: T.leafPaper, roughness: 0.85 }), { mapScale: 1.6 });
-    this.def('wavy', () => S({ color: 0xececea, normalMap: T.wavyN, normalScale: new THREE.Vector2(2.6, 2.6), roughness: 0.5 }), { mapScale: 2.4 });
+    this.def('wavy', () => S({ color: 0xececea, normalMap: T.wavyN, normalScale: new THREE.Vector2(3.2, 3.2), roughness: 0.5 }), { mapScale: 2.4 });
     this.def('walnut', () => S({ map: T.walnut, normalMap: T.walnutN, normalScale: new THREE.Vector2(0.6, 0.6), roughness: 0.45, vertexColors: true }), { mapScale: 1.0, color: true });
     this.def('oak', () => S({ map: T.oak, normalMap: T.oakN, normalScale: new THREE.Vector2(0.5, 0.5), roughness: 0.5, vertexColors: true }), { mapScale: 1.0, color: true });
     this.def('fabric', () => S({ map: T.weave, normalMap: T.weaveN, normalScale: new THREE.Vector2(0.7, 0.7), roughness: 0.92, vertexColors: true }), { mapScale: 0.3, color: true });

@@ -70,7 +70,7 @@ async function boot() {
   // compile every shader up front so walking into a room never stutters
   ui.progress(0.68, 'تجهيز المؤثرات');
   await nextFrame();
-  for (const z of world.zones) z.group.visible = true;
+  for (const z of world.zones) { z.group.visible = true; z.setLod('full'); }
   lighting.assign(world.byId.A, [world.byId.B], null, true);
   try { await renderer.compileAsync(scene, camera); } catch (e) { renderer.compile(scene, camera); }
 
@@ -80,7 +80,7 @@ async function boot() {
   let n = 0;
   for (let pass = 0; pass < passes; pass++) {
     for (const z of world.zones) {
-      for (const o of world.zones) o.group.visible = o === z || z.neighbors.has(o.id);
+      for (const o of world.zones) { o.setLod('full'); o.group.visible = o === z || z.neighbors.has(o.id); }
       lighting.assign(z, [...z.neighbors].map((id) => world.byId[id]), null, true);
       probes.capture(z);
       n++;
@@ -118,18 +118,21 @@ async function boot() {
   }
   function visibleSet(cam, start) {
     pm.multiplyMatrices(cam.projectionMatrix, cam.matrixWorldInverse);
-    const vis = new Set([start]);
+    const vis = new Map([[start, 'full']]);
     const q = [{ z: start, r: [-1, 1, -1, 1], d: 0 }];
     while (q.length) {
       const { z, r, d } = q.shift();
       for (const p of z.portals) {
         const other = world.byId[p.a === z.id ? p.b : p.a];
-        if (vis.has(other)) continue;
+        if (other === start) continue;
         const pr = portalRect(p, cam);
         if (!pr) continue;
         const nr = [Math.max(r[0], pr[0]), Math.min(r[1], pr[1]), Math.max(r[2], pr[2]), Math.min(r[3], pr[3])];
         if (nr[0] >= nr[1] || nr[2] >= nr[3]) continue;
-        vis.add(other);
+        const w = nr[1] - nr[0];
+        const lod = w < 0.1 && cam.position.distanceTo(p.center) > 3.5 ? 'shell' : 'full';
+        if (vis.has(other)) { if (lod === 'full') vis.set(other, 'full'); continue; }
+        vis.set(other, lod);
         if (d < 3) q.push({ z: other, r: nr, d: d + 1 });
       }
     }
@@ -144,7 +147,11 @@ async function boot() {
     }
     ui.showRoom(labelFor(cur));
     const vis = visibleSet(camera, cur);
-    for (const o of world.zones) o.group.visible = vis.has(o);
+    for (const o of world.zones) {
+      const m = vis.get(o);
+      o.group.visible = !!m;
+      if (m) o.setLod(m);
+    }
     return vis;
   }
 
@@ -210,13 +217,13 @@ async function boot() {
       R.render(0.016);
       return this.info();
     },
-    pose(X, Y, yaw, pitch = 0) { player.mode = 'free'; player.setPose(X, Y, yaw, pitch); player.update(0); updateZones(true); lighting.update(1); R.render(0.016); return this.info(); },
+    pose(X, Y, yaw, pitch = 0) { player.mode = 'free'; player.path = null; player.tourPaused = false; player.setPose(X, Y, yaw, pitch); player.update(0); updateZones(true); lighting.update(1); R.render(0.016); return this.info(); },
     frame(dt = 1 / 30) { step(dt); return this.info(); },
     info() {
       const i = renderer.info;
       return {
         calls: i.render.calls, triangles: i.render.triangles, textures: i.memory.textures, geometries: i.memory.geometries,
-        zone: cur && cur.id, visible: world.zones.filter((z) => z.group.visible).map((z) => z.id),
+        zone: cur && cur.id, visible: world.zones.filter((z) => z.group.visible).map((z) => z.id + (z.lod === 'shell' ? '*' : '')),
         pos: [player.pos.x, player.pos.y], yaw: player.yaw, preset: preset.name, texMB: Math.round(T.gen.bytes / 1048576),
         zoneStats: Object.fromEntries(world.zones.map((z) => [z.id, z.stats])),
       };

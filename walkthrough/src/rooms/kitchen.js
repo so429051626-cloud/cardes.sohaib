@@ -73,7 +73,7 @@ export function buildD(z) {
     for (let x = -w / 2 + 0.15; x < w / 2 - 0.15; x += rng.range(0.18, 0.32)) {
       const t = rng.int(0, 2);
       if (t === 0) { const h = rng.range(0.14, 0.24); k.cyl(sol('#e8eef0', 0.08, 0), 0.05, 0.05, h, x, y + 0.03 + h / 2, d / 2, { seg: 18 }); k.cyl(sol('#c9a35c', 0.3, 1), 0.052, 0.052, 0.02, x, y + 0.03 + h, d / 2, { seg: 18 }); }
-      else if (t === 1) k.boxB(sol(rng.pick(['#e9e2d5', '#c8b293', '#f1f1ef', '#7c6a58']), 0.8, 0), 0.12, rng.range(0.16, 0.3), 0.18, x, y + 0.03, d / 2, { r: 0.004 });
+      else if (t === 1) k.boxB(sol(rng.pick(['#e9e6e0', '#bdb3a4', '#f1f1ef', '#6f6a64']), 0.8, 0), 0.12, rng.range(0.16, 0.3), 0.18, x, y + 0.03, d / 2, { r: 0.004 });
       else k.cyl(sol(rng.pick(['#d7d2c8', '#3b3c3e', '#f2f2f0']), 0.4, 0), 0.06, 0.06, 0.12, x, y + 0.09, d / 2, { seg: 20 });
     }
   }

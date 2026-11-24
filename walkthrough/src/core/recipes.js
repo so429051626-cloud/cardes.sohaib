@@ -106,7 +106,7 @@ vec3 albedo(vec2 uv) {
   vec2 q = vec2(fbm(p, per, 4), fbm(p + vec2(2.1, 8.3), per, 4));
   float cl = fbm(p * 2.0 + 2.0 * q, per * 2.0, 6);
   float v = 1.0 - smoothstep(0.0, 0.08, abs(fbm(p + 1.8 * q, per, 6)));
-  vec3 c = vec3(0.97) * (1.0 - 0.05 * smoothstep(-0.2, 0.6, cl) - 0.06 * v);
+  vec3 c = vec3(0.97) * (1.0 - 0.018 * smoothstep(-0.2, 0.6, cl) - 0.018 * v);
   ${LIN}
 }
 float height(vec2 uv) { return 0.0; }
@@ -117,11 +117,10 @@ float rough(vec2 uv) { return 0.85; }
 R.wavy = /* glsl */ `
 float height(vec2 uv) {
   vec2 per = vec2(3.0);
-  float w = 0.9 * fbm(uv * per, per, 3);
+  float w = 0.35 * fbm(uv * per, per, 3);
   float a = sin(6.2831853 * (3.0 * uv.x + 4.0 * uv.y) + w * 3.0);
   float b = sin(6.2831853 * (2.0 * uv.x + 5.0 * uv.y) + w * 2.0 + 1.3);
-  float c = sin(6.2831853 * (5.0 * uv.x + 3.0 * uv.y) - w * 2.5 + 2.1);
-  return 0.012 * (0.55 * a + 0.3 * b + 0.15 * c);
+  return 0.014 * (0.78 * a + 0.22 * b);
 }
 vec3 albedo(vec2 uv) { return srgb2lin(vec3(0.925)); }
 float rough(vec2 uv) { return 0.55; }
@@ -133,8 +132,8 @@ export function wood(dark, mid, light, ringFreq, fineAmt) {
 float grainT(vec2 uv) {
   float n = fbm(vec2(uv.x * 6.0, uv.y * 1.0), vec2(6.0, 1.0), 5);
   float n2 = fbm(vec2(uv.x * 3.0, uv.y * 2.0) + 7.0, vec2(3.0, 2.0), 4);
-  float rings = 0.5 + 0.5 * sin((uv.x * ${ringFreq.toFixed(1)} + n * 3.0 + n2 * 1.5) * 6.2831853);
-  rings = pow(rings, 2.2);
+  float rings = 0.5 + 0.5 * sin((uv.x * ${ringFreq.toFixed(1)} + n * 0.85 + n2 * 0.35) * 6.2831853);
+  rings = pow(rings, 2.6) * (0.6 + 0.4 * (0.5 + 0.5 * n2));
   float fine = 0.5 + 0.5 * gnoise(vec2(uv.x * 420.0, uv.y * 4.0), vec2(420.0, 4.0));
   float fine2 = 0.5 + 0.5 * gnoise(vec2(uv.x * 900.0, uv.y * 9.0), vec2(900.0, 9.0));
   return clamp(0.55 * rings + ${fineAmt.toFixed(3)} * (fine - 0.5) + 0.12 * (fine2 - 0.5) + 0.2 * n2, 0.0, 1.0);

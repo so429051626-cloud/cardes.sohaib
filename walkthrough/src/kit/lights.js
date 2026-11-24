@@ -59,7 +59,7 @@ export function tripleRing(bottom, ceil) {
     k.rod(C.black, [Math.cos(a) * 0.25, bottom + 0.32, Math.sin(a) * 0.25], [Math.cos(a) * 0.1, ceil, Math.sin(a) * 0.1], 0.0015, { seg: 4 });
   }
   canopy(k, ceil, 0.12);
-  k.light({ type: 'point', p: [0, bottom + 0.1, 0], color: kelvin(3000), intensity: 2.4, distance: 6 });
+  k.light({ type: 'point', p: [0, bottom - 0.2, 0], color: kelvin(3200), intensity: 1.4, distance: 6 });
   return k;
 }
 
@@ -77,7 +77,7 @@ export function crystalDandelion(dia, bottom, ceil) {
     k.rod(crystal, [d[0] * 0.06, hub + d[1] * 0.06, d[2] * 0.06], [d[0] * r1, hub + d[1] * r1, d[2] * r1], 0.0028, { seg: 4 });
     if (i % 3 === 0) k.sphere(emit('#fff4e6', 4), 0.006, d[0] * (r1 + 0.004), hub + d[1] * (r1 + 0.004), d[2] * (r1 + 0.004), { ws: 6, hs: 4 });
   }
-  k.light({ type: 'point', p: [0, hub, 0], color: kelvin(2900), intensity: 2.0, distance: 6 });
+  k.light({ type: 'point', p: [0, hub - 0.4, 0], color: kelvin(3200), intensity: 1.2, distance: 6 });
   return k;
 }
 
@@ -93,9 +93,9 @@ export function starburst(n, bottom, ceil) {
     const L = lens[i % 3];
     const e = [d[0] * L, hub + d[1] * L, d[2] * L];
     k.rod(C.brass, [d[0] * 0.06, hub + d[1] * 0.06, d[2] * 0.06], e, 0.0035, { seg: 5 });
-    k.sphere(emit('#fff6ea', 4.5), 0.011, e[0], e[1], e[2], { ws: 8, hs: 6 });
+    k.sphere(emit('#fff8f0', 3.2), 0.011, e[0], e[1], e[2], { ws: 8, hs: 6 });
   }
-  k.light({ type: 'point', p: [0, hub, 0], color: kelvin(3000), intensity: 2.6, distance: 7 });
+  k.light({ type: 'point', p: [0, hub - 0.45, 0], color: kelvin(3400), intensity: 1.1, distance: 7 });
   return k;
 }
 
@@ -136,7 +136,7 @@ export function doubleWaveRing(bottom, ceil) {
     k.rod(C.black, [Math.cos(a) * 0.45, bottom + 0.06, Math.sin(a) * 0.45], [Math.cos(a) * 0.3, ceil, Math.sin(a) * 0.3], 0.0015, { seg: 4 });
   }
   canopy(k, ceil, 0.1);
-  k.light({ type: 'point', p: [0, bottom + 0.1, 0], color: kelvin(3000), intensity: 2.0, distance: 6 });
+  k.light({ type: 'point', p: [0, bottom - 0.2, 0], color: kelvin(3200), intensity: 1.2, distance: 6 });
   return k;
 }
 
